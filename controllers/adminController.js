@@ -3,6 +3,7 @@ const User = require('../models/User');
 
 // Seviye oluşturma sayfası
 exports.getCreateLevel = (req, res) => {
+  if (!req.session.user || req.session.user.username !== "tavtie") return res.redirect("/game");
   res.render('admin/createLevel');
 };
 
