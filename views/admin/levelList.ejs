@@ -1,0 +1,12 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-5">
+  <h2>Seviye Listesi</h2>
+  <ul class="list-group">
+    <% levels.forEach(level => { %>
+      <li class="list-group-item">Seviye <%= level.number %></li>
+    <% }) %>
+  </ul>
+</div>
+
+<%- include('../partials/footer') %>

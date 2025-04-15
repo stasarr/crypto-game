@@ -1,0 +1,10 @@
+<div class="container mt-3">
+    <div class="progress" style="height: 20px;">
+      <div class="progress-bar progress-bar-striped bg-success" role="progressbar" 
+           style="width: <%= progress %>%;" 
+           aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">
+        <%= Math.round(progress) %>%
+      </div>
+    </div>
+  </div>
+  

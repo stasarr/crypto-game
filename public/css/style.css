@@ -1,0 +1,76 @@
+body {
+    background-color: #f9f9f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .container {
+    max-width: 900px;
+  }
+  
+  .letter-input {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    text-align: center;
+    text-transform: lowercase;
+    font-weight: bold;
+    font-size: 20px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .letter-input.correct {
+    border-color: green;
+    background-color: #d4edda;
+    color: green;
+  }
+  
+  .letter-input.incorrect {
+    border-color: red;
+    background-color: #f8d7da;
+    color: red;
+  }
+  
+  .punctuation {
+    display: inline-block;
+    margin: 5px;
+    font-size: 20px;
+  }
+  
+  #jokerButton {
+    font-weight: bold;
+  }
+  
+  #submitButton {
+    font-weight: bold;
+  }
+  
+  .game-board {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Kelimelerin bölünmesini önler */
+  .word {
+    display: inline-block;
+    white-space: nowrap;
+  }
+  
+  /* Boşlukları göstermek için ayraç (isteğe göre genişliği arttırılabilir) */
+  .space {
+    width: 20px;
+    display: inline-block;
+  }
+  
+  /* Progres bar arka planı */
+  .progress {
+    background-color: #e0e0e0;
+  }
+  

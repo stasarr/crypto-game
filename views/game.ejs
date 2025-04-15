@@ -1,0 +1,83 @@
+<%- include('./partials/header') %>
+<%- include('./partials/progressbar') %>
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Seviye <%= level.number %></h4>
+    <span>Puan: <%= user.score %></span>
+    <a href="/logout" class="btn btn-outline-danger btn-sm">Çıkış</a>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>İpucu Harfler:</strong>
+    <% clueLetters.forEach(clue => { %>
+      <span class="badge bg-primary me-2"><%= clue.encrypted %> ➜ <%= clue.original %></span>
+    <% }) %>
+  </div>
+
+  <div class="game-board mb-3">
+    <% 
+      const encrypted = level.encryptedText;
+      const original = level.originalText.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ]/g, '');
+      const words = encrypted.split(/(\s+)/); // boşluklara göre böl ama boşlukları da koru
+      let realIndex = 0;
+    
+      for (let word of words) {
+        const isSpace = /^\s+$/.test(word);
+        if (isSpace) {
+    %>
+          <span class="space"><%= word %></span>
+    <%
+        } else {
+    %>
+          <div class="word">
+            <% for (let i = 0; i < word.length; i++) {
+                 const char = word[i];
+                 const isLetter = /[a-zA-ZğüşıöçĞÜŞİÖÇ]/.test(char);
+                 if (isLetter) {
+                   const originalChar = original[realIndex];
+            %>
+                <input maxlength="1" 
+                       data-index="<%= realIndex %>" 
+                       data-answer="<%= originalChar.toLowerCase() %>" 
+                       placeholder="<%= char %>" 
+                       class="letter-input" />
+            <%
+                   realIndex++;
+                 } else {
+            %>
+                <span class="punctuation"><%= char %></span>
+            <% 
+                 }
+               }
+            %>
+          </div>
+    <%
+        }
+      }
+    %>
+  </div>
+  
+   
+<script>
+    const originalLetters = <%- JSON.stringify(originalLetters) %>;
+    const clueLetters = <%- JSON.stringify(clueLetters) %>;
+  </script>
+  
+  <div class="mb-3">
+    <button id="jokerButton" class="btn btn-warning">Joker Kullan (<span id="jokerCount">3</span>)</button>
+  </div>
+
+  <div>
+    <button id="submitButton" class="btn btn-success">Cevabı Gönder</button>
+  </div>
+
+  <hr>
+
+  <h5>Liderlik Tablosu</h5>
+  <ul class="list-group" id="leaderboard">
+    <li class="list-group-item">Yükleniyor...</li>
+  </ul>
+</div>
+
+<%- include('./partials/footer') %>

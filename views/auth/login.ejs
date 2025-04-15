@@ -1,0 +1,24 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-5">
+  <h2 class="text-center">Giriş Yap</h2>
+  <% if (error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+  <% } %>
+  <form action="/login" method="POST" class="w-50 mx-auto">
+    <div class="mb-3">
+      <label>Kullanıcı Adı</label>
+      <input type="text" name="username" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label>Şifre</label>
+      <input type="password" name="password" class="form-control" required>
+    </div>
+    <button class="btn btn-primary w-100">Giriş Yap</button>
+    <div class="text-center mt-3">
+      <a href="/register">Hesabınız yok mu? Kayıt olun</a>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>
