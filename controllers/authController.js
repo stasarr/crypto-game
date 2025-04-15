@@ -1,6 +1,10 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 
+exports.redirect = (req, res) => {
+  res.redirect('/game');
+};
+
 exports.getLogin = (req, res) => {
   res.render('auth/login', { error: null });
 };

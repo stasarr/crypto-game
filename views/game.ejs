@@ -1,7 +1,7 @@
 <%- include('./partials/header') %>
 <%- include('./partials/progressbar') %>
 
-<div class="container mt-4">
+<div class="container mt-4 mb-5">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h4>Seviye <%= level.number %></h4>
     <span>Puan: <%= user.score %></span>
@@ -11,7 +11,7 @@
   <div class="alert alert-info">
     <strong>İpucu Harfler:</strong>
     <% clueLetters.forEach(clue => { %>
-      <span class="badge bg-primary me-2"><%= clue.encrypted %> ➜ <%= clue.original %></span>
+      <span class="badge bg-primary me-2"><%= clue.encrypted.toUpperCase() %> ➜ <%= clue.original.toUpperCase() %></span>
     <% }) %>
   </div>
 
@@ -59,7 +59,7 @@
   </div>
   
    
-<script>
+  <script>
     const originalLetters = <%- JSON.stringify(originalLetters) %>;
     const clueLetters = <%- JSON.stringify(clueLetters) %>;
   </script>
@@ -74,10 +74,34 @@
 
   <hr>
 
+  <h5>Bilgiler</h5>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <span>Yanlış girdiğin her harf için <strong>10 puan</strong> kaybedersiniz.</span>
+    </li>
+    <li class="list-group-item">
+      <span>Joker kullanmak için <strong>25 puan</strong> harcadığınızı unutmayın.</span>
+    </li>
+    <li class="list-group-item">
+      <span>Açmak istediğiniz harfi seçtikten sonra joker kullanarak seçtiğiniz harfi açabilirsiniz.</span>
+    </li>
+  </ul>
+
+  <hr>
+
   <h5>Liderlik Tablosu</h5>
   <ul class="list-group" id="leaderboard">
-    <li class="list-group-item">Yükleniyor...</li>
+    <% if (leaderboard && leaderboard.length > 0) { %>
+      <% leaderboard.forEach((user, index) => { %>
+        <li class="list-group-item">
+          <strong><%= index + 1 %> - <%= user.username %></strong> - <%= user.score %> Puan
+        </li>
+      <% }) %>
+    <% } else { %>
+      <li class="list-group-item">Liderlik tablosu boş.</li>
+    <% } %>
   </ul>
+
 </div>
 
 <%- include('./partials/footer') %>

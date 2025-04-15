@@ -8,7 +8,9 @@ exports.getCreateLevel = (req, res) => {
 
 // Yeni seviye ekleme
 exports.postCreateLevel = async (req, res) => {
-  const { number, originalText } = req.body;
+  const { number } = req.body;
+
+  let originalText = req.body.originalText.toLowerCase();
 
   // Şifreleme sadece İngilizce harfler için
   const encryptedText = originalText

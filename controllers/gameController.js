@@ -3,7 +3,17 @@ const User = require('../models/User');
 
 exports.getGame = async (req, res) => {
   if (!req.session.user) return res.redirect('/login');
+
   const user = await User.findById(req.session.user._id);
+
+  // Seviyenin en büyük numarasını almak
+  const maxLevel = await Level.find().sort({ number: -1 }).limit(1); // En yüksek seviyeyi bul
+
+  if (user.level >= maxLevel[0].number) {
+    // Eğer kullanıcı en yüksek seviyeye ulaşmışsa, theEnd sayfasını renderla
+    return res.render('theEnd');
+  }
+
   const level = await Level.findOne({ number: user.level });
   if (!level) return res.send('Seviye bulunamadı');
 
@@ -12,12 +22,13 @@ exports.getGame = async (req, res) => {
   // Orijinal metni harflere ayır
   const cleanOriginal = level.originalText.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ]/g, '');
   const cleanEncrypted = level.encryptedText.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ]/g, '');
-  
+
   const originalLetters = cleanOriginal.split('').map((char, index) => ({
     char,
     encrypted: cleanEncrypted.charAt(index)
   }));
-  
+
+  const leaderboard = await User.find().sort({ score: -1 }).limit(10);
 
   res.render('game', {
     user,
@@ -25,9 +36,11 @@ exports.getGame = async (req, res) => {
     progress,
     clueLetters: level.clueLetters,
     originalLetters,  // Burada harfleri gönderiyoruz
-    joker: 3  // başlangıçta 3 joker
+    joker: 3,  // başlangıçta 3 joker
+    leaderboard  
   });
 };
+
 
 
 exports.postGame = async (req, res) => {
@@ -46,7 +59,6 @@ exports.postGame = async (req, res) => {
   if (originalText.toLowerCase() === playerText.toLowerCase()) {
     user.level++;
     user.score += 100 - (usedJokers * 25 + mistakes * 10);
-    console.log("Skor: ", (usedJokers * 25 + mistakes * 10))
     await user.save();
     return res.json({ success: true, nextLevelUrl: '/game' });
   }
