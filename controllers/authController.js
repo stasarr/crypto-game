@@ -26,16 +26,28 @@ exports.postLogin = async (req, res) => {
 };
 
 exports.postRegister = async (req, res) => {
-  const { username, password } = req.body;
+  let { username, password } = req.body;
+  
+  username = username.toLowerCase();
+
+  const usernameRegex = /^[a-z0-9]+$/;
+  if (!usernameRegex.test(username)) {
+    return res.render('auth/register', { error: 'Kullanıcı adı sadece küçük harf ve rakam içermelidir' });
+  }
+
   const existing = await User.findOne({ username });
-  if (existing) return res.render('auth/register', { error: 'Kullanıcı adı alınmış' });
+  if (existing) {
+    return res.render('auth/register', { error: 'Kullanıcı adı zaten alınmış' });
+  }
 
   const hash = await bcrypt.hash(password, 10);
   const user = new User({ username, password: hash });
   await user.save();
+
   req.session.user = user;
   res.redirect('/game');
 };
+
 
 exports.logout = (req, res) => {
   req.session.destroy(() => {
