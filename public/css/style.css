@@ -15,21 +15,22 @@ body {
     text-transform: lowercase;
     font-weight: bold;
     font-size: 20px;
-    border: 2px solid #ccc;
+    background-color: #24272b;
+    border: 2px solid #7f7c7c;
     border-radius: 4px;
     transition: all 0.2s ease-in-out;
   }
   
   .letter-input.correct {
-    border-color: green;
-    background-color: #d4edda;
-    color: green;
+    border-color: #00ff3d;
+    background-color: #2e412e;
+    color: #00ff3d;
   }
   
   .letter-input.incorrect {
-    border-color: red;
-    background-color: #f8d7da;
-    color: red;
+    border-color: #ff4747;
+    background-color: #653636;
+    color: #ff6976;
   }
   
   .punctuation {
@@ -52,9 +53,9 @@ body {
     align-items: center;
     gap: 5px;
     padding: 10px;
-    background-color: white;
+    background-color: #212529;
     border-radius: 8px;
-    border: 1px solid #ddd;
+    border: 2px solid #444;
   }
   
   /* Kelimelerin bölünmesini önler */
@@ -74,3 +75,26 @@ body {
     background-color: #e0e0e0;
   }
   
+  .list-group-item {
+    background-color: #212529;
+  }
+
+  .game-bg {
+    background-color: #2a2e33;
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  .text-lgray {
+    color: #dcdddd !important;
+  }
+
+  .game-alert-info {
+    position: relative;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    color: #9eeaf9;
+    background-color: #1e4047;
+    border: 1px solid #9eeaf9;
+    border-radius: 8px;
+  }

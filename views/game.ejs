@@ -2,13 +2,13 @@
 <%- include('./partials/progressbar') %>
 
 <div class="container mt-4 mb-5">
-  <div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="d-flex justify-content-between align-items-center mb-3 game-bg">
     <h4>Seviye <%= level.number %></h4>
     <span>Puan: <%= user.score %></span>
-    <a href="/logout" class="btn btn-outline-danger btn-sm">Çıkış</a>
+    <a href="/logout" class="btn btn-danger btn-sm">Çıkış</a>
   </div>
 
-  <div class="alert alert-info">
+  <div class="game-alert-info">
     <strong>İpucu Harfler:</strong>
     <% clueLetters.forEach(clue => { %>
       <span class="badge bg-primary me-2"><%= clue.encrypted.toUpperCase() %> ➜ <%= clue.original.toUpperCase() %></span>
@@ -41,7 +41,7 @@
                        data-index="<%= realIndex %>" 
                        data-answer="<%= originalChar.toLowerCase() %>" 
                        placeholder="<%= char %>" 
-                       class="letter-input" />
+                       class="letter-input" autocapitalize="off" autocomplete="off" autocorrect="off"/>
             <%
                    realIndex++;
                  } else {
@@ -63,26 +63,27 @@
     const originalLetters = <%- JSON.stringify(originalLetters) %>;
     const clueLetters = <%- JSON.stringify(clueLetters) %>;
   </script>
-  
-  <div class="mb-3">
-    <button id="jokerButton" class="btn btn-warning">Joker Kullan (<span id="jokerCount">3</span>)</button>
-  </div>
 
-  <div>
-    <button id="submitButton" class="btn btn-success">Cevabı Gönder</button>
+  <div class="d-flex">
+    <div class="mb-3">
+      <button id="jokerButton" class="btn btn-warning" style="margin-right: 5px;">Joker Kullan (<span id="jokerCount">3</span>)</button>
+    </div>
+    <div>
+      <button id="submitButton" class="btn btn-success">Cevabı Gönder</button>
+    </div>
   </div>
 
   <hr>
 
   <h5>Bilgiler</h5>
   <ul class="list-group">
-    <li class="list-group-item">
-      <span>Yanlış girdiğin her harf için <strong>10 puan</strong> kaybedersiniz.</span>
+    <li class="list-group-item bg-dark text-lgray">
+      <span>Yanlış girdiğiniz her harf için <strong>10 puan</strong> kaybedersiniz.</span>
     </li>
-    <li class="list-group-item">
+    <li class="list-group-item bg-dark text-lgray">
       <span>Joker kullanmak için <strong>25 puan</strong> harcadığınızı unutmayın.</span>
     </li>
-    <li class="list-group-item">
+    <li class="list-group-item bg-dark text-lgray">
       <span>Açmak istediğiniz harfi seçtikten sonra joker kullanarak seçtiğiniz harfi açabilirsiniz.</span>
     </li>
   </ul>
@@ -93,12 +94,12 @@
   <ul class="list-group" id="leaderboard">
     <% if (leaderboard && leaderboard.length > 0) { %>
       <% leaderboard.forEach((user, index) => { %>
-        <li class="list-group-item">
+        <li class="list-group-item bg-dark text-lgray">
           <strong><%= index + 1 %> - <%= user.username %></strong> - <%= user.score %> Puan
         </li>
       <% }) %>
     <% } else { %>
-      <li class="list-group-item">Liderlik tablosu boş.</li>
+      <li class="list-group-item bg-dark text-lgray">Liderlik tablosu boş.</li>
     <% } %>
   </ul>
 

@@ -8,50 +8,67 @@ exports.getCreateLevel = (req, res) => {
 };
 
 // Yeni seviye ekleme
+const removeDiacritics = (text) => {
+  return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+};
+
 exports.postCreateLevel = async (req, res) => {
   const { number } = req.body;
 
-  let originalText = req.body.originalText.toLowerCase();
+  // Orijinal metni normalize et, sadece küçük harf yap, diakritikleri temizle
+  let originalText = removeDiacritics(req.body.originalText.toLowerCase());
 
-  // Şifreleme sadece İngilizce harfler için
+  // Türkçe küçük harfler (sadece sabit, güvenilir karakterler)
+  const alphabet = 'abcçdefgğhıijklmnoöprsştuüvyz'.split('');
+
+  // Türk alfabesiyle karıştırılmış şifreleme alfabesi
+  const shuffledAlphabet = shuffleTurkishAlphabet(alphabet);
+
+  // Harf eşleştirme (cipher map)
+  const cipherMap = {};
+  alphabet.forEach((char, i) => {
+    cipherMap[char] = shuffledAlphabet[i];
+  });
+
+  // Şifreleme
   const encryptedText = originalText
     .split('')
-    .map(char => {
-      const code = char.charCodeAt(0);
-      // Sadece İngilizce harfleri şifrele
-      if (char >= 'a' && char <= 'z') {
-        return String.fromCharCode(((code - 97 + 1) % 26) + 97); // küçük harf
-      } else if (char >= 'A' && char <= 'Z') {
-        return String.fromCharCode(((code - 65 + 1) % 26) + 65); // büyük harf
-      } else {
-        return char; // Türkçe karakterler, noktalama vs. dokunma
-      }
-    })
+    .map(char => cipherMap[char] || char) // Sadece alfabe içindeyse şifrele
     .join('');
 
-  // Metindeki harflerin sayısını say ve en az iki kez geçen harfleri ipucu olarak al
+  // Harf sayımı (ipucu için)
   const letterCounts = {};
   for (const char of originalText) {
-    if (/[a-zA-ZğüşıöçĞÜŞİÖÇ]/.test(char)) {
-      letterCounts[char.toLowerCase()] = (letterCounts[char.toLowerCase()] || 0) + 1;
+    if (alphabet.includes(char)) {
+      letterCounts[char] = (letterCounts[char] || 0) + 1;
     }
   }
 
-  // En az 2 kez geçen harfleri filtrele
   const clueCandidates = Object.entries(letterCounts)
-    .filter(([char, count]) => count >= 2)  // sadece 2 veya daha fazla kez geçen harfler
+    .filter(([_, count]) => count >= 2)
     .map(([char]) => char)
-    .slice(0, 3);  // Maksimum 3 ipucu harfi seç
+    .slice(0, 3);
 
-  // Şifrelenmiş metinde karşılık gelen şifreli harfleri bul ve ipucunu oluştur
   const clueLetters = clueCandidates.map((originalChar) => {
-    const encryptedChar = encryptedText[originalText.indexOf(originalChar)];
+    const firstIndex = originalText.indexOf(originalChar);
+    const encryptedChar = encryptedText[firstIndex];
     return { original: originalChar, encrypted: encryptedChar };
   });
 
   await Level.create({ number, originalText, encryptedText, clueLetters });
   res.redirect('/admin/levels');
 };
+
+// Güvenli karıştırma fonksiyonu
+function shuffleTurkishAlphabet(alphabet) {
+  const array = [...alphabet];
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 
 
 // Seviye listesi
