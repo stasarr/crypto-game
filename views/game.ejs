@@ -11,8 +11,10 @@
   <div class="game-alert-info">
     <strong>İpucu Harfler:</strong>
     <% clueLetters.forEach(clue => { %>
-      <span class="badge bg-primary me-2"><%= clue.encrypted.toUpperCase() %> ➜ <%= clue.original.toUpperCase() %></span>
-    <% }) %>
+      <span class="badge bg-primary me-2">
+        <%= clue.encrypted.toLocaleUpperCase('tr-TR') %> ➜ <%= clue.original.toLocaleUpperCase('tr-TR') %>
+      </span>
+    <% }) %>    
   </div>
 
   <div class="game-board mb-3">
