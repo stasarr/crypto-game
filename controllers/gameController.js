@@ -9,7 +9,7 @@ exports.getGame = async (req, res) => {
   // Seviyenin en büyük numarasını almak
   const maxLevel = await Level.find().sort({ number: -1 }).limit(1); // En yüksek seviyeyi bul
 
-  if (user.level >= maxLevel[0].number) {
+  if (user.level > maxLevel[0].number) {
     // Eğer kullanıcı en yüksek seviyeye ulaşmışsa, theEnd sayfasını renderla
     return res.render('theEnd');
   }
@@ -17,7 +17,7 @@ exports.getGame = async (req, res) => {
   const level = await Level.findOne({ number: user.level });
   if (!level) return res.send('Seviye bulunamadı');
 
-  const progress = (user.level - 1) / 10 * 100;
+  const progress = (user.level - 1) / maxLevel[0].number * 100;
 
   // Orijinal metni harflere ayır
   const cleanOriginal = level.originalText.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ]/g, '');
