@@ -48,6 +48,7 @@ exports.postGame = async (req, res) => {
 
   const user = await User.findById(req.session.user._id);
   const level = await Level.findOne({ number: user.level });
+  const firstUserScore = user.score;
 
   const answers = req.body.answers || [];
   const usedJokers = parseInt(req.body.usedJokers) || 0;
@@ -59,6 +60,11 @@ exports.postGame = async (req, res) => {
   if (originalText.toLowerCase() === playerText.toLowerCase()) {
     user.level++;
     user.score += 100 - (usedJokers * 25 + mistakes * 10);
+
+    if (100 - (usedJokers * 25 + mistakes * 10) < 0 && Math.abs(100 - (usedJokers * 25 + mistakes * 10)) > firstUserScore) {
+      const errorMsg = 'Skor değerinizde olağandışı bir durum tespit edildi! Oynadığınız seviye kabul edilmedi.';
+      return res.json({ success: false, error: errorMsg, reason: "suspicion" });
+    }
 
     if (100 - (usedJokers * 25 + mistakes * 10) > 100) {
       const errorMsg = 'Skor değerinizde olağandışı bir durum tespit edildi! Oynadığınız seviye kabul edilmedi.';

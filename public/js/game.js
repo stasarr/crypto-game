@@ -150,11 +150,21 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    alert("Tebrikler! Bir sonraki seviyeye geçiyorsunuz.");
-                    window.location.href = data.nextLevelUrl || '/game';
+                    const levelUpModel = new bootstrap.Modal(document.getElementById('levelUpModel'));
+                    levelUpModel.show();
+                
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
+                    return;
                 } else {
                     if (data.reason === "suspicion") {
-                        window.location.href = '/game/suspicion';
+                        const suspicionModal = new bootstrap.Modal(document.getElementById('suspicionModal'));
+                        suspicionModal.show();
+                    
+                        setTimeout(() => {
+                            location.reload();
+                        }, 3000);
                         return;
                     }
                     alert("Bazı harfler yanlış. Lütfen tekrar deneyin.");
