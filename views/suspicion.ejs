@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kanvas Oyun</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow" />
+  <link href="/css/style.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-dark text-lgray">
+    <div class="modal show" tabindex="-1" aria-labelledby="gameLostModalLabel" aria-hidden="true" style="display:block !important; background-color: #dc35457a !important;">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content text-center">
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title w-100" id="gameLostModalLabel">❌ Nö nö nö!</h5>
+            </div>
+            <div class="modal-body" style="background-color: #2a2e33 !important;">
+              Skor değerinizde olağandışı bir durum tespit edildi! Oynadığınız seviye kabul edilmedi.<br><br> Yönlendiriliyorsunuz lütfen bekleyin...
+            </div>
+          </div>
+        </div>
+      </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  setTimeout(() => {
+    window.location.href = "/game";
+  }, 9000);
+</script>
+</body>
+</html>

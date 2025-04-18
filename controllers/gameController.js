@@ -59,6 +59,12 @@ exports.postGame = async (req, res) => {
   if (originalText.toLowerCase() === playerText.toLowerCase()) {
     user.level++;
     user.score += 100 - (usedJokers * 25 + mistakes * 10);
+
+    if (user.score > 100) {
+      const errorMsg = 'Skor değerinizde olağandışı bir durum tespit edildi! Oynadığınız seviye kabul edilmedi.';
+      return res.json({ success: false, error: errorMsg, reason: "suspicion" });
+    }
+
     await user.save();
     return res.json({ success: true, nextLevelUrl: '/game' });
   }
@@ -91,4 +97,8 @@ exports.useJoker = async (req, res) => {
   if (!letter) return res.status(400).json({ success: false, message: "Bu indekste harf yok." });
 
   res.json({ success: true, letter });
+};
+
+exports.suspicion = (req, res) => {
+  res.render('suspicion', { error: null });
 };

@@ -4,7 +4,8 @@
 <div class="container mt-4 mb-5">
   <div class="d-flex justify-content-between align-items-center mb-3 game-bg">
     <h4>Seviye <%= level.number %></h4>
-    <span>Puan: <%= user.score %></span>
+    <span id="thisGameScore"><stroke>Seviye Puanı:</stroke> 100</span>
+    <span><stroke>Genel Puan:</stroke> <%= user.score %></span>
     <a href="/logout" class="btn btn-danger btn-sm">Çıkış</a>
   </div>
 
@@ -59,11 +60,11 @@
       }
     %>
   </div>
-  
-   
+
   <script>
     const originalLetters = <%- JSON.stringify(originalLetters) %>;
     const clueLetters = <%- JSON.stringify(clueLetters) %>;
+    const totalScore = <%= user.score %>
   </script>
 
   <div class="d-flex">
@@ -106,5 +107,65 @@
   </ul>
 
 </div>
+<div class="modal fade" id="gameLostModal" tabindex="-1" aria-labelledby="gameLostModalLabel" aria-hidden="true" style="background-color: #dc35457a !important;">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title w-100" id="gameLostModalLabel">❌ Oyunu Kaybettiniz!</h5>
+      </div>
+      <div class="modal-body" style="background-color: #2a2e33 !important;">
+        Seviye yeniden başlatılıyor. Lütfen bekleyin...
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const gameBoard = document.querySelector('.game-board');
+    const boardWidth = gameBoard.offsetWidth - 3 * parseFloat(getComputedStyle(gameBoard).fontSize);
+    
+    document.querySelectorAll('.word').forEach(wordEl => {
+      
+      const inputs = Array.from(wordEl.querySelectorAll('input'));
+      if (inputs.length <= 1) return;
+
+      let totalWidth = 0;
+      let splitIndex = -1;
+
+      for (let i = 0; i < inputs.length; i++) {
+        totalWidth += inputs[i].offsetWidth + 5; // + margin
+        if (totalWidth > boardWidth) {
+          splitIndex = i;
+          break;
+        }
+      }
+
+      if (splitIndex !== -1) {
+        const firstHalf = inputs.slice(0, splitIndex);
+        const secondHalf = inputs.slice(splitIndex);
+
+        const hyphen = document.createElement("span");
+        hyphen.textContent = "-";
+        hyphen.classList.add("punctuation");
+
+        const newWordDiv = document.createElement("div");
+        newWordDiv.classList.add("word");
+
+        secondHalf.forEach(input => {
+          newWordDiv.appendChild(input);
+        });
+
+        // Mevcut word'den ikinci kısmı ayır
+        wordEl.innerHTML = "";
+        firstHalf.forEach(input => wordEl.appendChild(input));
+        wordEl.appendChild(hyphen);
+
+        wordEl.after(newWordDiv);
+      }
+    });
+  });
+</script>
 
 <%- include('./partials/footer') %>

@@ -98,3 +98,17 @@ body {
     border: 1px solid #9eeaf9;
     border-radius: 8px;
   }
+
+  .game-finish-info {
+    position: relative;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    color: #f99e9e;
+    background-color: #471e1e;
+    border: 1px solid #f99e9e;
+    border-radius: 8px;
+  }
+
+  .hidden {
+    display: none;
+  }

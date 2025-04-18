@@ -7,6 +7,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let mistakeCount = 0;
     const mistakeMap = new Map(); // Hangi inputta hata yapıldığını takip eder
 
+    // 🔢 PUAN SİSTEMİ
+    const baseScore = 100;
+    let currentScore = 100;
+    const scoreDisplay = document.getElementById('thisGameScore');
+
+    function updateScoreDisplay() {
+        scoreDisplay.innerHTML = `<strong>Seviye Puanı:</strong> ${currentScore}`;
+    }    
+
+    updateScoreDisplay();
+
     // Input geçişleri
     inputs.forEach((input, idx) => {
         input.addEventListener('focus', () => {
@@ -29,6 +40,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!mistakeMap.has(idx)) {
                         mistakeCount++;
                         mistakeMap.set(idx, true);
+
+
+                        // 🔻 YANLIŞ GİRİŞTE PUAN AZALT
+                        currentScore -= 10;
+                        updateScoreDisplay();
+
+                        if (currentScore < 0 && Math.abs(currentScore) > totalScore) {
+                        
+                            const gameLostModal = new bootstrap.Modal(document.getElementById('gameLostModal'));
+                            gameLostModal.show();
+                        
+                            setTimeout(() => {
+                                location.reload();
+                            }, 3000);
+                        }
+                        
+                        
                     }
                 }
 
@@ -85,6 +113,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         selectedInput.disabled = true;
                         jokerCount--;
                         document.getElementById('jokerCount').textContent = jokerCount;
+
+                        // 🔻 JOKER PUAN DÜŞÜŞÜ
+                        currentScore -= 25;
+                        updateScoreDisplay();
+
+                        if (currentScore < 0 && Math.abs(currentScore) > totalScore) {
+                        
+                            const gameLostModal = new bootstrap.Modal(document.getElementById('gameLostModal'));
+                            gameLostModal.show();
+                        
+                            setTimeout(() => {
+                                location.reload();
+                            }, 3000);
+                        }
                     }
                 });
         }
@@ -111,6 +153,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert("Tebrikler! Bir sonraki seviyeye geçiyorsunuz.");
                     window.location.href = data.nextLevelUrl || '/game';
                 } else {
+                    if (data.reason === "suspicion") {
+                        window.location.href = '/game/suspicion';
+                        return;
+                    }
                     alert("Bazı harfler yanlış. Lütfen tekrar deneyin.");
                     if (data.wrongIndices) {
                         data.wrongIndices.forEach(index => {
