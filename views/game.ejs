@@ -72,7 +72,10 @@
       <button id="jokerButton" class="btn btn-warning" style="margin-right: 5px;">Joker Kullan (<span id="jokerCount">3</span>)</button>
     </div>
     <div>
-      <button id="submitButton" class="btn btn-success">Cevabı Gönder</button>
+      <button id="submitButton" class="btn btn-success" style="margin-right: 5px;">Cevabı Gönder</button>
+    </div>
+    <div>
+      <button id="notesButton" onclick="document.getElementById('noteBox').classList.remove('hidden')" class="btn btn-success"><strong>📝 Notlarım</strong></button>
     </div>
   </div>
 
@@ -149,6 +152,14 @@
   </div>
 </div>
 
+<div id="noteBox" class="note-box shadow p-3 bg-light rounded">
+  <div class="note-header d-flex justify-content-between align-items-center mb-2">
+    <strong>📝 Notlarım</strong>
+    <button class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('noteBox').classList.add('hidden')">Kapat</button>
+  </div>
+  <textarea class="form-control h-100 border-0" placeholder="Buraya not alın..." style="resize: none;"></textarea>
+</div>
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
 
@@ -196,5 +207,39 @@
     });
   });
 </script>
+
+<script>
+  const noteBox = document.getElementById('noteBox');
+  const noteHeader = noteBox.querySelector('.note-header');
+  let isDragging = false, offsetX, offsetY;
+
+  noteHeader.addEventListener('mousedown', function (e) {
+    isDragging = true;
+    const rect = noteBox.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    noteBox.style.transition = 'none';
+  });
+
+  document.addEventListener('mousemove', function (e) {
+    if (isDragging) {
+      let left = e.clientX - offsetX;
+      let top = e.clientY - offsetY;
+
+      // Taşmayı engelle
+      left = Math.max(0, Math.min(window.innerWidth - noteBox.offsetWidth, left));
+      top = Math.max(0, Math.min(window.innerHeight - noteBox.offsetHeight, top));
+
+      noteBox.style.left = left + 'px';
+      noteBox.style.top = top + 'px';
+      noteBox.style.bottom = 'auto';
+    }
+  });
+
+  document.addEventListener('mouseup', function () {
+    isDragging = false;
+  });
+</script>
+
 
 <%- include('./partials/footer') %>
