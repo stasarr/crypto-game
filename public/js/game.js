@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const correctSound = new Audio('/sounds/correct.mp3');
+    correctSound.volume = 0.2;
+    const incorrectSound = new Audio('/sounds/incorrect.mp3');
+    incorrectSound.volume = 0.2;
+    const levelupSound = new Audio('/sounds/levelup.mp3');
+    levelupSound.volume = 0.2;
+    const errorSound = new Audio('/sounds/error.mp3');
+    errorSound.volume = 0.2;
+    const lostSound = new Audio('/sounds/lostgame.mp3');
+    lostSound.volume = 0.2;
+    const jokerSound = new Audio('/sounds/joker.mp3');
+    jokerSound.volume = 0.2;
     const inputs = document.querySelectorAll('.letter-input');
     const jokerButton = document.getElementById('jokerButton');
     const submitButton = document.getElementById('submitButton');
@@ -32,9 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (value === correctAnswer) {
                     input.classList.remove('incorrect');
                     input.classList.add('correct');
+                    correctSound.currentTime = 0; // Baştan başlat
+                    correctSound.play();                
                 } else {
                     input.classList.remove('correct');
                     input.classList.add('incorrect');
+                    incorrectSound.currentTime = 0;
+                    incorrectSound.play();                
 
                     // Bu input için daha önce hata sayılmamışsa bir kez say
                     if (!mistakeMap.has(idx)) {
@@ -47,7 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         updateScoreDisplay();
 
                         if (currentScore < 0 && Math.abs(currentScore) > totalScore) {
-                        
+                            lostSound.currentTime = 0;
+                            lostSound.play(); 
+
                             const gameLostModal = new bootstrap.Modal(document.getElementById('gameLostModal'));
                             gameLostModal.show();
                         
@@ -96,7 +114,10 @@ document.addEventListener('DOMContentLoaded', () => {
             );
 
             if (isClue) {
+                errorSound.currentTime = 0;
+                errorSound.play();  
                 alert("Bu harf zaten ipucu olarak verildi!");
+                
                 return;
             }
 
@@ -113,13 +134,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         selectedInput.disabled = true;
                         jokerCount--;
                         document.getElementById('jokerCount').textContent = jokerCount;
+                        jokerSound.currentTime = 0;
+                        jokerSound.play();  
 
                         // 🔻 JOKER PUAN DÜŞÜŞÜ
                         currentScore -= 25;
                         updateScoreDisplay();
 
                         if (currentScore < 0 && Math.abs(currentScore) > totalScore) {
-                        
+                            lostSound.currentTime = 0;
+                            lostSound.play(); 
+
                             const gameLostModal = new bootstrap.Modal(document.getElementById('gameLostModal'));
                             gameLostModal.show();
                         
@@ -152,6 +177,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.success) {
                     const levelUpModel = new bootstrap.Modal(document.getElementById('levelUpModel'));
                     levelUpModel.show();
+                    levelupSound.currentTime = 0;
+                    levelupSound.play();   
                 
                     setTimeout(() => {
                         location.reload();
@@ -161,12 +188,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.reason === "suspicion") {
                         const suspicionModal = new bootstrap.Modal(document.getElementById('suspicionModal'));
                         suspicionModal.show();
+                        errorSound.currentTime = 0;
+                        errorSound.play();   
                     
                         setTimeout(() => {
                             location.reload();
                         }, 3000);
                         return;
                     }
+                    errorSound.currentTime = 0;
+                    errorSound.play();   
                     alert("Bazı harfler yanlış. Lütfen tekrar deneyin.");
                     if (data.wrongIndices) {
                         data.wrongIndices.forEach(index => {
