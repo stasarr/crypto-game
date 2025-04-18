@@ -60,7 +60,7 @@ exports.postGame = async (req, res) => {
     user.level++;
     user.score += 100 - (usedJokers * 25 + mistakes * 10);
 
-    if (user.score > 100) {
+    if (100 - (usedJokers * 25 + mistakes * 10) > 100) {
       const errorMsg = 'Skor değerinizde olağandışı bir durum tespit edildi! Oynadığınız seviye kabul edilmedi.';
       return res.json({ success: false, error: errorMsg, reason: "suspicion" });
     }

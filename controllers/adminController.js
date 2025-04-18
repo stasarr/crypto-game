@@ -12,11 +12,39 @@ const removeDiacritics = (text) => {
   return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 };
 
+function removeForeignDiacritics(str) {
+  // Türkçe karakterleri geçici olarak koruyalım
+  const turkishMap = {
+    'ç': '<<c>>', 'Ç': '<<C>>',
+    'ğ': '<<g>>', 'Ğ': '<<G>>',
+    'ı': '<<i>>', 'İ': '<<I>>',
+    'ö': '<<o>>', 'Ö': '<<O>>',
+    'ş': '<<s>>', 'Ş': '<<S>>',
+    'ü': '<<u>>', 'Ü': '<<U>>',
+  };
+
+  // Türkçe karakterleri geçici olarak sakla
+  Object.entries(turkishMap).forEach(([char, placeholder]) => {
+    str = str.replaceAll(char, placeholder);
+  });
+
+  // Geri kalan tüm diakritikleri temizle (şapkalı p, s, f vs.)
+  str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+  // Türkçe karakterleri geri getir
+  Object.entries(turkishMap).forEach(([char, placeholder]) => {
+    str = str.replaceAll(placeholder, char);
+  });
+
+  return str;
+}
+
+
 exports.postCreateLevel = async (req, res) => {
   const { number } = req.body;
 
   // Orijinal metni normalize et, sadece küçük harf yap, diakritikleri temizle
-  let originalText = removeDiacritics(req.body.originalText.toLowerCase());
+  let originalText = removeForeignDiacritics(req.body.originalText.toLowerCase());
 
   // Türkçe küçük harfler (sadece sabit, güvenilir karakterler)
   const alphabet = 'abcçdefgğhıijklmnoöprsştuüvyz'.split('');
