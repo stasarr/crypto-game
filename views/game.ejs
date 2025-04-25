@@ -101,7 +101,7 @@
     <% if (leaderboard && leaderboard.length > 0) { %>
       <% leaderboard.forEach((user, index) => { %>
         <li class="list-group-item bg-dark text-lgray">
-          <strong><%= index + 1 %> - <%= user.username %></strong> - <%= user.score %> Puan
+          <strong><%= index + 1 %> - <%= user.username %></strong> <span class="float-end badge bg-success bg-gradient ms-1"> <%= user.score %> Puan </span> <% if (user.level > 20) { %> <span class="float-end badge bg-info bg-gradient text-dark"> 🎉 Tüm Seviyeleri Tamamladı </span> <% } else { %> <span class="float-end badge bg-warning bg-gradient text-dark"> <%= user.level %> Seviye </span> <% } %>
         </li>
       <% }) %>
     <% } else { %>
